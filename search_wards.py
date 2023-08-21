@@ -23,8 +23,10 @@ def search_word_in_tree(word: str) -> dict:
     except:
         return None
 
-def find_in_dict(sid:int)-> insertion.SentenceInfo:
+
+def find_in_dict(sid: int) -> insertion.SentenceInfo:
     return dict_del[sid]
+
 
 def get_word_corrections(word: str) -> list:
     possible_corrections = []
@@ -69,20 +71,21 @@ def correction_to_input(words: list) -> dict:
         word_curects = get_word_corrections(word)
         for try_word in word_curects:
             change_words[i] = try_word
-            list_sugwst=search_suggestion(words)
-            if list_sugwst!=[]:
+            list_sugwst = search_suggestion(words)
+            if list_sugwst != []:
                 comleate_sentences[" ".join(change_words)] = search_suggestion(words)
     return comleate_sentences
 
+
 def compare_func(x, y):
-    if x.score>y.score:
+    if x.score > y.score:
         return 1
-    elif x.score<y.score:
+    elif x.score < y.score:
         return -1
     else:
-        if x.completed_sentence>y.completed_sentence:
+        if x.completed_sentence > y.completed_sentence:
             return 1
-        elif x.completed_sentence<y.completed_sentence:
+        elif x.completed_sentence < y.completed_sentence:
             return -1
         return 0
 
@@ -97,10 +100,10 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     words = prefix.split()
     list_sid = search_suggestion(words)
     for sid in list_sid:
-        sentence=find_in_dict(sid)
-        completed_sentence=sentence.sentence
-        source_text=sentence.source
-        offset=sentence.offset
+        sentence = find_in_dict(sid)
+        completed_sentence = sentence.sentence
+        source_text = sentence.source
+        offset = sentence.offset
         score = len(prefix) * 2
         auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
 
@@ -119,6 +122,7 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     # auto_complete = sorted(auto_complete, key=cmp_func(compare_func))
     return auto_complete[:NUM_OF_COMPLETIONS]
 
+
 def search_suggestion(words: List) -> List[int]:
     """
     The function receives a list of string and searches for every word in the tree.
@@ -128,10 +132,10 @@ def search_suggestion(words: List) -> List[int]:
     intersection_dict = search_word_in_tree(words[0])
     words = words[1:]
     for word in words:  # Go through all the words in the input runtime o(the number of words in the input)
-        if intersection_dict == {} or intersection_dict==None:
+        if intersection_dict == {} or intersection_dict == None:
             return []
         ans_dict = search_word_in_tree(word)  # Running time = as long as the word
-        if ans_dict == {} or ans_dict==None:
+        if ans_dict == {} or ans_dict == None:
             return []
         common_sid = intersection_dict.keys() & ans_dict.keys()
         new_intersection_dict = {}
@@ -146,7 +150,20 @@ def search_suggestion(words: List) -> List[int]:
         intersection_dict = new_intersection_dict
     return list(intersection_dict.keys())
 
-def main(path="Archive1"):
+
+def init_system(path):
+    global trie_tree
+    global dict_del
+    path_list = []
+    for subdir, dirs, files in os.walk(path):
+        for file in files:
+            path_list.append(os.path.join(subdir, file))
+    dict_del, trie_tree = insertion.insert(path_list)
+    best_completions = get_best_k_completions("processing was")
+    return best_completions
+
+
+def main(path=r"C:\Users\tamar\excellenteam\bootcamp\googleProj\project\Archive-test"):
     global trie_tree
     global dict_del
     path_list = []
@@ -157,11 +174,11 @@ def main(path="Archive1"):
     print("dict_del")
     print(dict_del)
     print("search_word_in_tree()")
-    # print(search_word_in_tree("documentation")) #work
-    # print(search_suggestion(["documentation", "home", "documentation"]))
+    print(search_word_in_tree("processing"))  # work
+    print(search_suggestion(["processing", "was", "processingh"]))
 
     print("get_best_k_completions()")
-    l=get_best_k_completions("adocumentation home")
+    l = get_best_k_completions("processing was")
     print(l)
     print("get_best_k_completions()")
 
