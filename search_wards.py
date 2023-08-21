@@ -19,6 +19,9 @@ def finding_sentences_by_id(lt: list) -> list:
     """
     return []
 
+# ההפונקציה שתמר ממשת
+def curect_word(word:str)->list:
+    return []
 
 def finding_follower_number(num: int, lt: list) -> int:
     """
@@ -34,9 +37,7 @@ def finding_follower_number(num: int, lt: list) -> int:
             return -1
     return -1
 
-# ההפונקציה שתמר ממשת
-def curect_word(word:str)->list:
-    return []
+
 
 def curect_sentence(words:list)->list:
     """
@@ -55,27 +56,32 @@ def curect_sentence(words:list)->list:
 
 
 
-def get_best_kֵ_completions(prefix: str) -> List[AutoCompleteData]:
+def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     """
 
     :param prefix:
     :return:
     """
+    auto_complete=[]
     words=prefix.split()
     list_sid=search_suggestion(words)
     if len(list_sid)<5:
         list_sid=list_sid+curect_sentence(words)
-
-
+    for sid in list_sid:
+        completed_sentence: str
+        source_text: str
+        offset: int
+        score=words
+        auto_complete.append(AutoCompleteData(sid))
 
 
     return []
 
 
-def search_suggestion(words: List) -> List:
+def search_suggestion(words: List) -> List[int]:
     """
-    The function receives the input string, separates it into words and searches for every word in the tree.
-    :param input_user: The input we received from the user - the words for which we want to find completion.
+    The function receives a list of string and searches for every word in the tree.
+    :param words: The words for which we want to find completion.
     :return: A list of all possible completions. list of sid.
     """
     intersection_dict = search_word_in_tree(words[0])

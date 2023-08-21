@@ -5,5 +5,8 @@ from dataclasses import dataclass
 class AutoCompleteData:
     completed_sentence: str
     source_text: str
-    offֵset: int
+    offset: int
     score: int
+
+
+
