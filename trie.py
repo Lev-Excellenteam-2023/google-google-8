@@ -3,6 +3,8 @@ class TrieNode:
     def __init__(self):
         self.children = [None] * 26
         self.dict=None
+        self.dict = {}
+
 
 
 class Trie:
@@ -21,12 +23,12 @@ class Trie:
         # use only 'a' through 'z' and lower case
         return ord(ch.lower()) - ord('a')
 
-    def insert(self, word:str,dictionary_of_word:dict):
+    def insert(self, word: str, dictionary_of_word: dict):
 
         # If not present, inserts key into trie
         # If the key is prefix of trie node,
         # just marks leaf node
-        word=word.lower()
+        word = word.lower()
 
         pCrawl = self.root
         length = len(word)
@@ -42,7 +44,7 @@ class Trie:
 
 
 
-    def search(self, word:str):
+    def search(self, word: str):
         # Search key in the trie
         # Returns true if key presents
         # in trie, else false
@@ -55,7 +57,6 @@ class Trie:
             if not pCrawl.children[index]:
                 return None
             pCrawl = pCrawl.children[index]
-
         if pCrawl.dict!=None:
             return pCrawl
         return None

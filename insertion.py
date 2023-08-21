@@ -1,8 +1,8 @@
 import string
+from dataclasses import dataclass
 import trie
 import os
 from dataclasses import dataclass
-
 
 @dataclass
 class SentenceInfo:
@@ -29,6 +29,7 @@ def remove_punctuation(input_string):
     result = input_string.translate(translator)
 
     return result
+
 def insert_to_file_dict(file_path: str, file_content_list: list, count_uid: int) -> dict:
     """
     insert the lines of the file into a dictionary that the keys are uid of the line
@@ -47,7 +48,6 @@ def insert_to_file_dict(file_path: str, file_content_list: list, count_uid: int)
     return dict_of_lines_in_file
 
 
-
 def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, count_uid: int) -> (trie.Trie, int):
     """
     insert the words from the file to trie tree
@@ -57,8 +57,8 @@ def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, c
     :param count_uid: the next uid of line to use
     :return the trie tree and the uid of the next line:
     """
-    list_without_punctuation=[remove_punctuation(line) for line in file_content_list]
 
+    list_without_punctuation=[remove_punctuation(line) for line in file_content_list]
     for line in list_without_punctuation:
         words = line.split()
         for index, word in enumerate(words):
@@ -101,8 +101,8 @@ def insert(file_paths: list) -> (dict, trie.Trie):
     return dict_of_all_sentences, trie_of_all_words
 
 
+
 def main(path="Archive1"):
-    # dir_list = os.listdir(path)
     path_list = []
     for subdir, dirs, files in os.walk(path):
         for file in files:
