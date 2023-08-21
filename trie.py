@@ -2,18 +2,15 @@ class TrieNode:
     # Trie node class
     def __init__(self):
         self.children = [None] * 26
-        self.dict={}
-
+        self.dict=None
 
 
 class Trie:
-
     # Trie data structure class
     def __init__(self):
         self.root = self.getNode()
 
     def getNode(self):
-
         # Returns new trie node (initialized to NULLs)
         return TrieNode()
 
@@ -35,7 +32,6 @@ class Trie:
         length = len(word)
         for level in range(length):
             index = self._charToIndex(word[level])
-
             # if current character is not present
             if not pCrawl.children[index]:
                 pCrawl.children[index] = self.getNode()
@@ -47,7 +43,6 @@ class Trie:
 
 
     def search(self, word:str):
-
         # Search key in the trie
         # Returns true if key presents
         # in trie, else false
@@ -61,5 +56,7 @@ class Trie:
                 return None
             pCrawl = pCrawl.children[index]
 
-        return pCrawl
+        if pCrawl.dict!=None:
+            return pCrawl
+        return None
 
