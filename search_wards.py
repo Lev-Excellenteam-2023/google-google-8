@@ -2,6 +2,7 @@ from typing import List
 
 from AutoCompleteDataClass import AutoCompleteData
 
+
 def search_word_in_tree(word: str) -> dict:
     """
     The function searches for a word in the tree and returns a dictionary.
@@ -19,9 +20,11 @@ def finding_sentences_by_id(lt: list) -> list:
     """
     return []
 
+
 # ההפונקציה שתמר ממשת
-def curect_word(word:str)->list:
+def curect_word(word: str) -> list:
     return []
+
 
 def finding_follower_number(num: int, lt: list) -> int:
     """
@@ -38,22 +41,32 @@ def finding_follower_number(num: int, lt: list) -> int:
     return -1
 
 
-
-def curect_sentence(words:list)->list:
+def curect_sentence(words: list) -> list:
     """
     The function receives a list of words and tries to correct each of the words to return a list of suggestions to complete the sentence.
     :param words: The list of words the user entered.
     :return: sid list of sentences
     """
-    list_comleate_sentences=[]
-    for i,word in enumerate(words):
-        word_curects=curect_word(word)
+    list_comleate_sentences = []
+    for i, word in enumerate(words):
+        word_curects = curect_word(word)
         for try_word in word_curects:
-            words[i]=try_word
-            list_comleate_sentences=list_comleate_sentences+search_suggestion(words)
+            words[i] = try_word
+            list_comleate_sentences = list_comleate_sentences + search_suggestion(words)
     return list_comleate_sentences
 
 
+def get_word_corrections(word: str) -> list:
+    possible_corrections = []
+    for ch in range(ord('a'), ord('z') + 1):
+        possible_corrections.append(ch + word)
+        possible_corrections.append(word + ch)
+
+    for i in range(len(word)):
+        for ch in range(ord('a'), ord('z') + 1):
+            possible_corrections.append(word[:i] + ch + word[i + 1:])
+
+    return possible_corrections
 
 
 def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
@@ -62,18 +75,17 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     :param prefix:
     :return:
     """
-    auto_complete=[]
-    words=prefix.split()
-    list_sid=search_suggestion(words)
-    if len(list_sid)<5:
-        list_sid=list_sid+curect_sentence(words)
+    auto_complete = []
+    words = prefix.split()
+    list_sid = search_suggestion(words)
+    if len(list_sid) < 5:
+        list_sid = list_sid + curect_sentence(words)
     for sid in list_sid:
         completed_sentence: str
         source_text: str
         offset: int
-        score=words
+        score = words
         auto_complete.append(AutoCompleteData(sid))
-
 
     return []
 
