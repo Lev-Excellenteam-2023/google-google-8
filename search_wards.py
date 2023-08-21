@@ -1,3 +1,6 @@
+from typing import List
+
+from AutoCompleteDataClass import AutoCompleteData
 
 def search_word_in_tree(word: str) -> dict:
     """
@@ -31,14 +34,50 @@ def finding_follower_number(num: int, lt: list) -> int:
             return -1
     return -1
 
+# ההפונקציה שתמר ממשת
+def curect_word(word:str)->list:
+    return []
 
-def search_suggestion(input_user: str) -> list:
+def curect_sentence(words:list)->list:
+    """
+    The function receives a list of words and tries to correct each of the words to return a list of suggestions to complete the sentence.
+    :param words: The list of words the user entered.
+    :return: sid list of sentences
+    """
+    list_comleate_sentences=[]
+    for i,word in enumerate(words):
+        word_curects=curect_word(word)
+        for try_word in word_curects:
+            words[i]=try_word
+            list_comleate_sentences=list_comleate_sentences+search_suggestion(words)
+    return list_comleate_sentences
+
+
+
+
+def get_best_kֵ_completions(prefix: str) -> List[AutoCompleteData]:
+    """
+
+    :param prefix:
+    :return:
+    """
+    words=prefix.split()
+    list_sid=search_suggestion(words)
+    if len(list_sid)<5:
+        list_sid=list_sid+curect_sentence(words)
+
+
+
+
+    return []
+
+
+def search_suggestion(words: List) -> List:
     """
     The function receives the input string, separates it into words and searches for every word in the tree.
     :param input_user: The input we received from the user - the words for which we want to find completion.
-    :return: A list of all possible completions.
+    :return: A list of all possible completions. list of sid.
     """
-    words = input_user.split()
     intersection_dict = search_word_in_tree(words[0])
     words = words[1:]
     for word in words:  # Go through all the words in the input runtime o(the number of words in the input)
