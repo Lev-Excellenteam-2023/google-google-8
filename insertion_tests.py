@@ -19,7 +19,7 @@ def remove_not_letters(input_string):
     """
     string_with_only_letters=''
     for letter in input_string:
-        if letter>='a' and letter<='z':
+        if (letter>='a' and letter<='z') or (letter>='A' and letter<='Z') :
             string_with_only_letters+=letter
     return string_with_only_letters
 
