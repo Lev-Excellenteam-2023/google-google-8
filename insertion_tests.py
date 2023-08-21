@@ -10,14 +10,19 @@ file_content_list=['Advanced Bash-Scripting Guide',
 '<thegrendel.abs@gmail.com>',
 ]
 
-def remove_punctuation(input_string):
-    # Make a translation table that maps all punctuation characters to None
-    translator = str.maketrans("", "", string.punctuation)
 
-    # Apply the translation table to the input string
-    result = input_string.translate(translator)
+def remove_not_letters(input_string):
+    """
+    return the input string without punctuation
+    :param input_string:
+    :return: string without no-letters
+    """
+    string_with_only_letters=''
+    for letter in input_string:
+        if (letter>='a' and letter<='z') or (letter>='A' and letter<='Z') :
+            string_with_only_letters+=letter
+    return string_with_only_letters
 
-    return result
 
 class InsertionTests(unittest.TestCase):
 
@@ -27,7 +32,7 @@ class InsertionTests(unittest.TestCase):
     def test_insert_to_tree_function(self):
         trie_tree_of_all_words = trie.Trie()
         trie_tree_of_all_words, _ = insertion.insert_to_tree(file_content_list, trie_tree_of_all_words, 1)
-        list_without_punctuation=[remove_punctuation(line) for line in file_content_list]
+        list_without_punctuation=[remove_not_letters(line) for line in file_content_list]
         for line in list_without_punctuation:
             words=line.split()
             for word in words:

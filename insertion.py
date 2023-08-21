@@ -10,25 +10,19 @@ class SentenceInfo:
     source: str
     offset: int
 
-    def __init__(self, sentence: str, source: str, offset: int):
-        self.sentence = sentence
-        self.source = source
-        self.offset = offset
 
-
-def remove_punctuation(input_string):
+def remove_not_letters(input_string):
     """
     return the input string without punctuation
     :param input_string:
-    :return: string without punctuation
+    :return: string without no-letters
     """
-    # Make a translation table that maps all punctuation characters to None
-    translator = str.maketrans("", "", string.punctuation)
+    string_with_only_letters=''
+    for letter in input_string:
+        if (letter>='a' and letter<='z') or (letter>='A' and letter<='Z') :
+            string_with_only_letters+=letter
+    return string_with_only_letters
 
-    # Apply the translation table to the input string
-    result = input_string.translate(translator)
-
-    return result
 
 def insert_to_file_dict(file_path: str, file_content_list: list, count_uid: int) -> dict:
     """
@@ -58,7 +52,7 @@ def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, c
     :return the trie tree and the uid of the next line:
     """
 
-    list_without_punctuation=[remove_punctuation(line) for line in file_content_list]
+    list_without_punctuation=[remove_not_letters(line) for line in file_content_list]
     for line in list_without_punctuation:
         words = line.split()
         for index, word in enumerate(words):
