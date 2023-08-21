@@ -1,7 +1,10 @@
 from typing import List
+from score import score_completion
 
 from AutoCompleteDataClass import AutoCompleteData
 
+#move to const.py
+NUM_OF_COMPLETIONS=5
 
 def search_word_in_tree(word: str) -> dict:
     """
@@ -9,6 +12,8 @@ def search_word_in_tree(word: str) -> dict:
     :param word: The word you are looking for in the tree.
     :return: Dictionary: key = id of the sentence, value = list of the positions in the sentence where the word is found.
     """
+    # dict1={1:"what yo do good do",2:"what the time to sleep"}
+
     return {}
 
 
@@ -21,9 +26,17 @@ def finding_sentences_by_id(lt: list) -> list:
     return []
 
 
-# ההפונקציה שתמר ממשת
-def curect_word(word: str) -> list:
-    return []
+def get_word_corrections(word: str) -> list:
+    possible_corrections = []
+    for ch in range(ord('a'), ord('z') + 1):
+        possible_corrections.append(ch + word)
+        possible_corrections.append(word + ch)
+
+    for i in range(len(word)):
+        for ch in range(ord('a'), ord('z') + 1):
+            possible_corrections.append(word[:i] + ch + word[i + 1:])
+
+    return possible_corrections
 
 
 def finding_follower_number(num: int, lt: list) -> int:
@@ -41,53 +54,52 @@ def finding_follower_number(num: int, lt: list) -> int:
     return -1
 
 
-def curect_sentence(words: list) -> list:
+def correction_to_input(words: list) -> dict:
     """
-    The function receives a list of words and tries to correct each of the words to return a list of suggestions to complete the sentence.
+    The function receives a list of words and tries to correct each of the words.
     :param words: The list of words the user entered.
-    :return: sid list of sentences
+    :return: A dictionary that the key entered after the correction and the value is a list of all the sid of the auto complete completions.
     """
-    list_comleate_sentences = []
+    comleate_sentences = {}
     for i, word in enumerate(words):
-        word_curects = curect_word(word)
+        change_words = words
+        word_curects = get_word_corrections(word)
         for try_word in word_curects:
-            words[i] = try_word
-            list_comleate_sentences = list_comleate_sentences + search_suggestion(words)
-    return list_comleate_sentences
-
-
-def get_word_corrections(word: str) -> list:
-    possible_corrections = []
-    for ch in range(ord('a'), ord('z') + 1):
-        possible_corrections.append(ch + word)
-        possible_corrections.append(word + ch)
-
-    for i in range(len(word)):
-        for ch in range(ord('a'), ord('z') + 1):
-            possible_corrections.append(word[:i] + ch + word[i + 1:])
-
-    return possible_corrections
-
+            change_words[i] = try_word
+            comleate_sentences[" ".join(change_words)]=search_suggestion(words)
+    return comleate_sentences
 
 def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     """
-
-    :param prefix:
-    :return:
+    The function receives input from the user and finds suggestions for completion
+    :param prefix:input
+    :return: AutoCompleteData
     """
     auto_complete = []
     words = prefix.split()
     list_sid = search_suggestion(words)
-    if len(list_sid) < 5:
-        list_sid = list_sid + curect_sentence(words)
     for sid in list_sid:
-        completed_sentence: str
-        source_text: str
-        offset: int
-        score = words
-        auto_complete.append(AutoCompleteData(sid))
+        # After the integration with the data structure, all fields need to be initialized.
+        # completed_sentence: str
+        # source_text: str
+        # offset: int
+        score = len(prefix)*2
+        auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
 
-    return []
+    if len(list_sid) < NUM_OF_COMPLETIONS:
+        correction =correction_to_input(words)
+        for correct_word,l_sid in correction:
+            for sid in l_sid:
+                #After the integration with the data structure, all fields need to be initialized.
+                # completed_sentence: str
+                # source_text: str
+                # offset: int
+                score = score_completion(prefix, correct_word)
+                auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
+
+    auto_complete.sort(reverse=True,key=lambda x: x.score)
+    return auto_complete[:NUM_OF_COMPLETIONS]
+
 
 
 def search_suggestion(words: List) -> List[int]:
