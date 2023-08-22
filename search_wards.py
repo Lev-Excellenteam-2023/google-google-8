@@ -15,7 +15,8 @@ def search_word_in_tree(word: str) -> dict:
     """
     The function searches for a word in the tree and returns a dictionary.
     :param word: The word you are looking for in the tree.
-    :return: Dictionary: key = id of the sentence, value = list of the positions in the sentence where the word is found.
+    :return: Dictionary: key is id of the sentence,
+    value is list of the positions in the sentence where the word is found.
     """
     try:
         return trie_tree.search(word).dict
@@ -36,10 +37,13 @@ def find_in_dict(sid: int) -> insertion.SentenceInfo:
 
 def get_word_corrections(word: str) -> list:
     possible_corrections = []
+
+    # append to end
     for ch in range(ord('a'), ord('z') + 1):
         letter = chr(ch)
         possible_corrections.append(word + letter)
 
+    # insert and replace
     for i in range(len(word)):
         possible_corrections.append(word[:i] + word[i + 1:])
         for ch in range(ord('a'), ord('z') + 1):
@@ -47,6 +51,7 @@ def get_word_corrections(word: str) -> list:
             possible_corrections.append(word[:i] + letter + word[i + 1:])
             possible_corrections.append(word[:i] + letter + word[i:])
 
+    # filter words not in tree
     in_tree_possible_corrections = []
     for word in possible_corrections:
         if search_word_in_tree(word):
@@ -76,29 +81,37 @@ def correction_to_input(words: list) -> dict:
     :param words: The list of words the user entered.
     :return: A dictionary that the key entered after the correction and the value is a list of all the sid of the auto complete completions.
     """
-    comleate_sentences = {}
+    complete_sentences = {}
     for i, word in enumerate(words):
         change_words = words
-        word_curects = get_word_corrections(word)
-        for try_word in word_curects:
+        word_corrections = get_word_corrections(word)
+        for try_word in word_corrections:
             change_words[i] = try_word
-            list_sugwst = search_suggestion(change_words)
-            if list_sugwst != []:
-                comleate_sentences[" ".join(change_words)] = list_sugwst
-    return comleate_sentences
+            list_suggest = search_suggestion(change_words)
+            if list_suggest:
+                complete_sentences[" ".join(change_words)] = list_suggest
+    return complete_sentences
 
 
-def compare_func(x, y):
-    if x.score > y.score:
-        return 1
-    elif x.score < y.score:
-        return -1
-    else:
-        if x.completed_sentence > y.completed_sentence:
-            return 1
-        elif x.completed_sentence < y.completed_sentence:
-            return -1
-        return 0
+# def compare_func(x, y):
+#     if x.score > y.score:
+#         return 1
+#     elif x.score < y.score:
+#         return -1
+#     else:
+#         if x.completed_sentence > y.completed_sentence:
+#             return 1
+#         elif x.completed_sentence < y.completed_sentence:
+#             return -1
+#         return 0
+
+
+def remove_duplicates(input_list):
+    unique_list = []
+    for item in input_list:
+        if item not in unique_list:
+            unique_list.append(item)
+    return unique_list
 
 
 def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
@@ -124,16 +137,23 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
         for correct_word in correction:
             for sid in correction[correct_word]:
                 sentence = find_in_dict(sid)
-                if sentence != None:
+                if sentence is not None:
                     completed_sentence = sentence.sentence
                     source_text = sentence.source
                     offset = sentence.offset
                     score = score_completion(prefix, correct_word)
                     auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
-    # It should be changed so that it returns the first five according to the ABC
-    auto_complete.sort(reverse=True, key=lambda x: (x.score, x.completed_sentence))
-    # auto_complete = sorted(auto_complete, key=cmp_func(compare_func))
-    return auto_complete[:NUM_OF_COMPLETIONS]
+
+    uniq_auto_complete = remove_duplicates(auto_complete)
+
+    # return the first five considering score and alphabet order
+    uniq_auto_complete.sort(reverse=True, key=lambda x: x.score)
+    top_k = uniq_auto_complete[:NUM_OF_COMPLETIONS]
+    i = NUM_OF_COMPLETIONS
+    while i < len(uniq_auto_complete) and uniq_auto_complete[i].score == top_k[-1].score:
+        top_k.append(uniq_auto_complete[i])
+    top_k.sort(reverse=False, key=lambda x: x.completed_sentence)
+    return top_k[:NUM_OF_COMPLETIONS]
 
 
 def search_suggestion(words: List) -> List[int]:
@@ -145,14 +165,15 @@ def search_suggestion(words: List) -> List[int]:
     intersection_dict = search_word_in_tree(words[0])
     words = words[1:]
     for word in words:  # Go through all the words in the input runtime o(the number of words in the input)
-        if intersection_dict == {} or intersection_dict == None:
+        if intersection_dict == {} or intersection_dict is None:
             return []
         ans_dict = search_word_in_tree(word)  # Running time = as long as the word
-        if ans_dict == {} or ans_dict == None:
+        if ans_dict == {} or ans_dict is None:
             return []
+        # Finding all the sentences that the two words have in common
         common_sid = intersection_dict.keys() & ans_dict.keys()
         new_intersection_dict = {}
-        for sid in common_sid:
+        for sid in common_sid:  # Checking that the two words are in consecutive positions in the sentence
             for i in intersection_dict[sid]:
                 num = finding_follower_number(i, ans_dict[sid])
                 if num != -1:
