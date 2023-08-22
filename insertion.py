@@ -4,6 +4,7 @@ import trie
 import os
 from dataclasses import dataclass
 
+
 @dataclass
 class SentenceInfo:
     sentence: str
@@ -17,10 +18,10 @@ def remove_not_letters(input_string):
     :param input_string:
     :return: string without no-letters
     """
-    string_with_only_letters=''
+    string_with_only_letters = ''
     for letter in input_string:
-        if (letter>='a' and letter<='z') or (letter>='A' and letter<='Z') :
-            string_with_only_letters+=letter
+        if (letter >= 'a' and letter <= 'z') or (letter >= 'A' and letter <= 'Z') or letter == ' ':
+            string_with_only_letters += letter
     return string_with_only_letters
 
 
@@ -36,7 +37,7 @@ def insert_to_file_dict(file_path: str, file_content_list: list, count_uid: int)
     dict_of_lines_in_file = {}
     count_lines = 0
     for i, sentence in enumerate(file_content_list):
-        dict_of_lines_in_file[count_uid] = SentenceInfo(sentence,file_path , i)
+        dict_of_lines_in_file[count_uid] = SentenceInfo(sentence, file_path, i)
         count_uid = count_uid + 1
         count_lines += 1
     return dict_of_lines_in_file
@@ -52,7 +53,7 @@ def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, c
     :return the trie tree and the uid of the next line:
     """
 
-    list_without_punctuation=[remove_not_letters(line) for line in file_content_list]
+    list_without_punctuation = [remove_not_letters(line) for line in file_content_list]
     for line in list_without_punctuation:
         words = line.split()
         for index, word in enumerate(words):
@@ -64,7 +65,7 @@ def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, c
                 if count_uid in trie_tree_of_all_words.search(word).dict:
                     trie_tree_of_all_words.search(word).dict[count_uid].append(index)
                 else:
-                    trie_tree_of_all_words.search(word).dict[count_uid]=[index]
+                    trie_tree_of_all_words.search(word).dict[count_uid] = [index]
         count_uid = count_uid + 1
     return trie_tree_of_all_words, count_uid
 
@@ -82,18 +83,17 @@ def insert(file_paths: list) -> (dict, trie.Trie):
     trie_of_all_words = trie.Trie()
     count_id = 1
     for file_path in file_paths:
-        with open(file_path, 'r',encoding='utf-8') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             file_content_list = file.readlines()
         sentence_dict = insert_to_file_dict(file_path, file_content_list, count_id)
         count_id += len(sentence_dict)
         dict_of_all_sentences = sentence_dict | dict_of_all_sentences
     count_id = 1
     for file_path in file_paths:
-        with open(file_path, 'r',encoding='utf-8') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             file_content_list = file.readlines()
         trie_of_all_words, count_id = insert_to_tree(file_content_list, trie_of_all_words, count_id)
     return dict_of_all_sentences, trie_of_all_words
-
 
 
 def main(path="Archive1"):
@@ -106,4 +106,3 @@ def main(path="Archive1"):
 
 if __name__ == "__main__":
     main()
-
