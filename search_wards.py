@@ -36,6 +36,11 @@ def find_in_dict(sid: int) -> insertion.SentenceInfo:
 
 
 def get_word_corrections(word: str) -> list:
+    """
+    Generate list of words from the tree that are possible fixes for the received word
+    :param word: word to fix
+    :return: list of correction suggestions
+    """
     possible_corrections = []
 
     # append to end
