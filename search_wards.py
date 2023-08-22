@@ -21,7 +21,7 @@ def search_word_in_tree(word: str) -> dict:
     try:
         return trie_tree.search(word).dict
     except:
-        return None
+        return {}
 
 
 def find_in_dict(sid: int) -> insertion.SentenceInfo:
@@ -118,7 +118,7 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
                 score = score_completion(prefix, correct_word)
                 auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
     # It should be changed so that it returns the first five according to the ABC
-    auto_complete.sort(reverse=True, key=lambda x: x.score)
+    auto_complete.sort(reverse=True, key=lambda x: (x.score, x.completed_sentence))
     # auto_complete = sorted(auto_complete, key=cmp_func(compare_func))
     return auto_complete[:NUM_OF_COMPLETIONS]
 
@@ -159,11 +159,9 @@ def init_system(path):
         for file in files:
             path_list.append(os.path.join(subdir, file))
     dict_del, trie_tree = insertion.insert(path_list)
-    best_completions = get_best_k_completions("processing was")
-    return best_completions
 
 
-def main(path=r"C:\Users\tamar\excellenteam\bootcamp\googleProj\project\Archive-test"):
+def main(path=r"C:\networks\google8\google-google-8\Archive1"):
     global trie_tree
     global dict_del
     path_list = []
