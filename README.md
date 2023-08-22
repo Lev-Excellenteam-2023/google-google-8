@@ -16,7 +16,6 @@ Every node has a dictionary. Keys are ids of sentences where the word appears an
 
 
 ## Detailed Code Flow
+We begin by inserting data from all the files into the trie tree and the dictionary. Afterward, we iterate through all the words in the input string and search for sentences in which all the words are found. We then verify that the words appear in consecutive positions within the sentence. The sentences that meet these conditions are considered as suggested sentences for this input. If there are fewer than 5 suggested sentences, we attempt to generate more suggestions by correction by trying to get suggestion of sentences that are similar to the input sentence. Next, we calculate a score for each suggested sentence and select the top 5 sentences with the highest scores. If there are multiple suggested sentences with equal scores, we prioritize the one that is lexicographically greater
 
-*Start by detailing how you've set up your main data structures. E.g., "We begin by collecting fruit prices from various sources." Then, explain the core logic or algorithm. E.g., "Next, we apply the Example Algorithm to identify price spikes." Conclude with any post-processing or output generation. E.g., "Finally, we visualize the price trends on a graph."*
 
-**Hint**: This section is just a placeholder example of fruit prices. Replace it with a clear and detailed flow of your actual project's logic, algorithms, and processes.
