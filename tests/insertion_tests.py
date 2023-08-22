@@ -1,8 +1,6 @@
-import string
 import unittest
 import insertion
 import trie
-from dataclasses import dataclass
 
 file_content_list=['Advanced Bash-Scripting Guide',
 'An in-depth exploration of the art of shell scripting',
@@ -39,9 +37,9 @@ class InsertionTests(unittest.TestCase):
                 self.assertIsNotNone(trie_tree_of_all_words.search(word))
 
     def test_insert_to_dic_function(self):
-        dic_of_all_sentences = insertion.insert_to_file_dict("test_file",file_content_list,1)
+        dic_of_all_sentences = insertion.insert_to_file_dict("test_file", file_content_list, 1)
         for index,line in enumerate(file_content_list):
-            assert dic_of_all_sentences[index+1]==insertion.SentenceInfo(line,"test_file",index)
+            assert dic_of_all_sentences[index+1] == insertion.SentenceInfo(line, "test_file", index)
 
 
 

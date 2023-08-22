@@ -2,9 +2,8 @@ class TrieNode:
     # Trie node class
     def __init__(self):
         self.children = [None] * 26
-        self.dict=None
+        self.dict = None
         self.dict = {}
-
 
 
 class Trie:
@@ -42,8 +41,6 @@ class Trie:
         # mark last node as leaf
         pCrawl.dict = dictionary_of_word
 
-
-
     def search(self, word: str):
         # Search key in the trie
         # Returns true if key presents
@@ -57,7 +54,6 @@ class Trie:
             if not pCrawl.children[index]:
                 return None
             pCrawl = pCrawl.children[index]
-        if pCrawl.dict!=None:
+        if pCrawl.dict != None:
             return pCrawl
         return None
-

@@ -1,6 +1,5 @@
 import unittest
 import search_wards
-from unittest.mock import Mock
 import insertion
 
 

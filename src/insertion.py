@@ -20,7 +20,7 @@ def remove_not_letters(input_string):
     """
     string_with_only_letters = ''
     for letter in input_string:
-        if (letter >= 'a' and letter <= 'z') or (letter >= 'A' and letter <= 'Z') or letter == ' ':
+        if ('a' <= letter <= 'z') or ('A' <= letter <= 'Z') or letter == ' ':
             string_with_only_letters += letter
     return string_with_only_letters
 
@@ -58,8 +58,7 @@ def insert_to_tree(file_content_list: list, trie_tree_of_all_words: trie.Trie, c
         words = line.split()
         for index, word in enumerate(words):
             if trie_tree_of_all_words.search(word) is None:
-                dic_of_word = {}
-                dic_of_word[count_uid] = [index]
+                dic_of_word = {count_uid: [index]}
                 trie_tree_of_all_words.insert(word, dic_of_word)
             else:
                 if count_uid in trie_tree_of_all_words.search(word).dict:
