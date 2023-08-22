@@ -93,20 +93,12 @@ def correction_to_input(words: list) -> dict:
     return complete_sentences
 
 
-# def compare_func(x, y):
-#     if x.score > y.score:
-#         return 1
-#     elif x.score < y.score:
-#         return -1
-#     else:
-#         if x.completed_sentence > y.completed_sentence:
-#             return 1
-#         elif x.completed_sentence < y.completed_sentence:
-#             return -1
-#         return 0
-
-
-def remove_duplicates(input_list):
+def remove_duplicates(input_list: list) -> list:
+    """
+    Removes duplicates from list
+    :param input_list: list to filter
+    :return: list filtered from duplicates
+    """
     unique_list = []
     for item in input_list:
         if item not in unique_list:
@@ -152,6 +144,7 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     i = NUM_OF_COMPLETIONS
     while i < len(uniq_auto_complete) and uniq_auto_complete[i].score == top_k[-1].score:
         top_k.append(uniq_auto_complete[i])
+        i += 1
     top_k.sort(reverse=False, key=lambda x: x.completed_sentence)
     return top_k[:NUM_OF_COMPLETIONS]
 
@@ -186,6 +179,10 @@ def search_suggestion(words: List) -> List[int]:
 
 
 def init_system(path):
+    """
+    Initialize data structures according to given dataset
+    :param path: path to dataset
+    """
     global trie_tree
     global dict_del
     path_list = []
