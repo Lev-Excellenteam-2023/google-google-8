@@ -1,7 +1,7 @@
 import os
 from typing import List
 from score import score_completion
-from AutoCompleteDataClass import AutoCompleteData
+from auto_complete_data_class import AutoCompleteData
 import insertion
 
 # move to const.py

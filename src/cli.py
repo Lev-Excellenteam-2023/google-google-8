@@ -1,4 +1,4 @@
-from search_wards import get_best_k_completions, init_system
+from search_words import get_best_k_completions, init_system
 import argparse
 
 

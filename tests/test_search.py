@@ -1,5 +1,5 @@
 import unittest
-import search_wards
+import search_words
 import insertion
 
 
