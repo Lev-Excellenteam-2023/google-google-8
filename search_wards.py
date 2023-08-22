@@ -28,7 +28,10 @@ def find_in_dict(sid: int) -> insertion.SentenceInfo:
     Gets an ID of a statement and returns its value.
     :return:data structure that contains a sentence, source and offset.
     """
-    return dict_del[sid]
+    try:
+        return dict_del[sid]
+    except:
+        return None
 
 
 def get_word_corrections(word: str) -> list:
@@ -109,22 +112,24 @@ def get_best_k_completions(prefix: str) -> List[AutoCompleteData]:
     list_sid = search_suggestion(words)
     for sid in list_sid:
         sentence = find_in_dict(sid)
-        completed_sentence = sentence.sentence
-        source_text = sentence.source
-        offset = sentence.offset
-        score = len(prefix) * 2
-        auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
+        if sentence is not None:
+            completed_sentence = sentence.sentence
+            source_text = sentence.source
+            offset = sentence.offset
+            score = len(prefix) * 2
+            auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
 
     if len(list_sid) < NUM_OF_COMPLETIONS:
         correction = correction_to_input(words)
         for correct_word in correction:
             for sid in correction[correct_word]:
                 sentence = find_in_dict(sid)
-                completed_sentence = sentence.sentence
-                source_text = sentence.source
-                offset = sentence.offset
-                score = score_completion(prefix, correct_word)
-                auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
+                if sentence != None:
+                    completed_sentence = sentence.sentence
+                    source_text = sentence.source
+                    offset = sentence.offset
+                    score = score_completion(prefix, correct_word)
+                    auto_complete.append(AutoCompleteData(completed_sentence, source_text, offset, score))
     # It should be changed so that it returns the first five according to the ABC
     auto_complete.sort(reverse=True, key=lambda x: (x.score, x.completed_sentence))
     # auto_complete = sorted(auto_complete, key=cmp_func(compare_func))
