@@ -17,7 +17,6 @@ def search_word_in_tree(word: str) -> dict:
     :param word: The word you are looking for in the tree.
     :return: Dictionary: key = id of the sentence, value = list of the positions in the sentence where the word is found.
     """
-    # dict1={1:"what yo do good do",2:"what the time to sleep"}
     try:
         return trie_tree.search(word).dict
     except:
@@ -25,6 +24,10 @@ def search_word_in_tree(word: str) -> dict:
 
 
 def find_in_dict(sid: int) -> insertion.SentenceInfo:
+    """
+    Gets an ID of a statement and returns its value.
+    :return:data structure that contains a sentence, source and offset.
+    """
     return dict_del[sid]
 
 
@@ -159,5 +162,3 @@ def init_system(path):
         for file in files:
             path_list.append(os.path.join(subdir, file))
     dict_del, trie_tree = insertion.insert(path_list)
-
-
