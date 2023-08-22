@@ -44,7 +44,12 @@ def get_word_corrections(word: str) -> list:
             possible_corrections.append(word[:i] + letter + word[i + 1:])
             possible_corrections.append(word[:i] + letter + word[i:])
 
-    return possible_corrections
+    in_tree_possible_corrections = []
+    for word in possible_corrections:
+        if search_word_in_tree(word):
+            in_tree_possible_corrections.append(word)
+
+    return in_tree_possible_corrections
 
 
 def finding_follower_number(num: int, lt: list) -> int:
@@ -74,9 +79,9 @@ def correction_to_input(words: list) -> dict:
         word_curects = get_word_corrections(word)
         for try_word in word_curects:
             change_words[i] = try_word
-            list_sugwst = search_suggestion(words)
+            list_sugwst = search_suggestion(change_words)
             if list_sugwst != []:
-                comleate_sentences[" ".join(change_words)] = search_suggestion(words)
+                comleate_sentences[" ".join(change_words)] = list_sugwst
     return comleate_sentences
 
 
