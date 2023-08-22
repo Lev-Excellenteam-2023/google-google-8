@@ -161,27 +161,3 @@ def init_system(path):
     dict_del, trie_tree = insertion.insert(path_list)
 
 
-def main(path=r"C:\networks\google8\google-google-8\Archive1"):
-    global trie_tree
-    global dict_del
-    path_list = []
-    for subdir, dirs, files in os.walk(path):
-        for file in files:
-            path_list.append(os.path.join(subdir, file))
-    dict_del, trie_tree = insertion.insert(path_list)
-    print("dict_del")
-    print(dict_del)
-    print("search_word_in_tree()")
-    print(search_word_in_tree("processing"))  # work
-    print(search_suggestion(["processing", "was", "processingh"]))
-
-    print("get_best_k_completions()")
-    l = get_best_k_completions("processing was")
-    print(l)
-    print("get_best_k_completions()")
-
-    # print(search_suggestion)
-
-
-if __name__ == "__main__":
-    main()
